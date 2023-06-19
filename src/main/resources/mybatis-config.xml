@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias alias="Auser" type="com.qst.entity.Auser"/>
+        <typeAlias alias="Goods" type="com.qst.entity.Goods"/>
+        <typeAlias alias="GoodsType" type="com.qst.entity.GoodsType"/>
+        <typeAlias alias="Notice" type="com.qst.entity.Notice"/>
+        <typeAlias alias="Buser" type="com.qst.entity.Buser"/>
+        <typeAlias alias="Order" type="com.qst.entity.Order"/>
+        <typeAlias alias="OrderDetail" type="com.qst.entity.OrderDetail"/>
+     </typeAliases>
+     <!-- <mappers>
+        <mapper resource="classpath:mapper/admin/AdminGoodsMapper.xml"/>
+        <mapper resource="mapper/admin/AdminMapper.xml"/>
+        <mapper resource="mapper/admin/AdminTypeMapper.xml"/>
+         <mapper resource="mapper/admin/AdminOrderMapper.xml"/>
+        <mapper resource="mapper/admin/AdminNoticeMapper.xml"/>
+        <mapper resource="mapper/IndexMapper.xml"/>
+        <mapper resource="mapper/admin/AdminUserMapper.xml"/>
+         <mapper resource="mapper/OrderMapper.xml"/>
+        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/CartMapper.xml"/>
+        <mapper resource="mapper/UserCenterMapper.xml"/>
+     </mappers> -->
+</configuration>

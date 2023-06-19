@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qst.dao.OrderDao">
+<resultMap id="OrderMap" type="Order">
+    <id column="id" property="id"></id>
+    <result column="busertable_id" property="busertable_id"></result>
+    <result column="amount" property="amount"></result>
+    <result column="status" property="status"></result>
+    <result column="orderdate" property="orderdate"></result>
+    <collection property="orderDetails" ofType="OrderDetail">
+        <id column="sid" property="id"/>
+        <result column="orderbasetable_id" property="orderId"></result>
+        <result column="goodstable_id" property="goodId"></result>
+        <result column="shoppingnum" property="goodNum"></result>
+        <result column="goodName" property="goodName"></result>
+        <result column="goodImg" property="goodImg"></result>
+        <result column="goodPrice" property="goodPrice"></result>
+    </collection>
+</resultMap>
+    <!-- 添加一个订单，成功后将主键值回填给id（po类的属性）-->
+    <insert id="addOrder" parameterType="Order" keyProperty="id" useGeneratedKeys="true">
+        insert into orderbasetable (busertable_id, amount, status, orderdate) values (#{busertable_id}, #{amount}, 0, now())
+    </insert>
+    <!-- 生成订单详情 -->
+    <insert id="addOrderDetail" parameterType="map">
+        insert into ORDERDETAIL (orderbasetable_id, goodstable_id, shoppingnum) 
+        values ( #{orderId},#{goodId} , #{goodNum} );
+    </insert>
+    <update id="updateOrderAmount" parameterType="map">
+        update orderbasetable 
+        set amount=amount+(SELECT grprice*#{goodNum} from goodstable WHERE id=#{goodId})
+        where id=#{orderId};
+    </update>
+    <select id="selectOrderByUser" resultMap="OrderMap" >
+        SELECT o.* ,od.*,od.id as sid,g.grprice as goodPrice, g.gname as goodName,g.gpicture as goodImg
+        from orderbasetable o left join orderdetail od on o.id = od.orderbasetable_id
+        LEFT JOIN goodstable g on od.goodstable_id  = g.id
+        WHERE o.busertable_id=#{userId} 
+    </select>
+    
+    <!-- 更新商品库存 -->
+    <update id="updateStore" parameterType="map">
+        update GOODSTABLE set GSTORE=GSTORE-#{goodNum} where id=#{goodId} 
+    </update>
+    
+    <!-- 支付订单 -->
+    <update id="pay" parameterType="Integer">
+        update orderbasetable set status=1 where id=#{ordersn}
+    </update>
+    
+</mapper>

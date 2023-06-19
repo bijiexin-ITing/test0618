@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- com.dao.AdminTypeDao对应Dao接口 -->
+<mapper namespace="com.qst.dao.AdminTypeDao">
+    <resultMap id="goodTypeMap" type="GoodsType">
+        <id column="id" property="id"></id>
+        <result column="typename" property="typename"></result>
+        <association property="parentType" javaType="GoodsType">
+            <id column="pid" property="id" />
+            <result column="ptypename" property="typename"></result>
+        </association>
+        <collection property="subType" ofType="GoodsType">
+            <id column="sid" property="id" />
+            <result column="stypename" property="typename"></result>
+        </collection>
+    </resultMap>
+
+    <!-- 查询类型信息 -->
+    <select id="selectGoodsType" resultMap="goodTypeMap">
+       <!-- SELECT * from goodstype; -->
+		SELECT a.id as id,a.typename as typename,b.id as sid,
+		b.typename as stypename
+		from (SELECT * from goodstype WHERE parent_id=0)a LEFT
+		JOIN
+		(SELECT * from goodstype WHERE parent_id!=0)b
+		on a.id=b.parent_id
+    </select>
+    <insert id="addType" parameterType="String">
+        insert into goodstype (id,
+        typename,parent_id) values (null, #{typename},0)
+    </insert>
+    <insert id="addType2" parameterType="map">
+        insert into goodstype (id,
+        typename,parent_id) values (null, #{typename},#{parentid})
+    </insert>
+    <delete id="deleteType" parameterType="Integer">
+        delete from goodstype
+        where id = #{id}
+    </delete>
+    <select id="selectGoodsByType" resultType="Goods"
+        parameterType="Integer">
+        <!-- select *,sale_num as saleNum from goodstable where goodstype_id=#{id} -->
+
+		select *,sale_num as saleNum from goodstable
+		where goodstype_id in(SELECT id from goodstype WHERE id=#{id} or
+		parent_id=#{id})
+    </select>
+    <select id="selectGoodType" resultType="GoodsType"
+        parameterType="Integer">
+        select * from goodstype where id=#{id}
+    </select>
+</mapper>

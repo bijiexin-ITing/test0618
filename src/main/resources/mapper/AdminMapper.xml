@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- com.dao.AdminDao对应Dao接口 -->
+<mapper namespace="com.qst.dao.AdminDao">
+    <!-- 查询用户信息 -->
+    <select id="login"  resultType="Auser" parameterType="Auser">
+        select * from ausertable where aname=#{aname} AND  apwd=#{apwd}
+    </select>
+    <select id="queryAuser"  resultType="Auser" >
+        select * from ausertable 
+    </select>
+    <insert id="addUser"   parameterType="Auser">
+        insert into  ausertable values (#{aname} ,#{apwd} )
+    </insert>  
+    <update id="updateUser" parameterType="Auser">
+    	UPDATE `ausertable` SET `apwd`=#{apwd} WHERE `aname`=#{aname};
+    </update>
+    <delete id="deleteUser"   parameterType="Auser">
+        delete   from ausertable where  aname= #{aname} AND apwd=#{apwd} 
+    </delete> 
+</mapper>
